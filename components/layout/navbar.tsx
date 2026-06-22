@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
 import { Menu, X } from "lucide-react";
 
 import { cn } from "@/lib/utils";
@@ -63,9 +64,11 @@ export function Navbar() {
               >
                 {t.nav[id]}
                 {isActive && (
-                  <span
+                  <motion.span
+                    layoutId="nav-active-underline"
                     className="absolute inset-x-3 -bottom-0.5 h-px"
                     style={{ background: ACTIVE_COLOR }}
+                    transition={{ type: "spring", stiffness: 500, damping: 35 }}
                   />
                 )}
               </button>
@@ -99,14 +102,19 @@ export function Navbar() {
                 type="button"
                 onClick={() => handleNavClick(id)}
                 className={cn(
-                  "rounded-lg px-3 py-2 text-left text-sm transition-colors",
-                  isActive
-                    ? "bg-background/60"
-                    : "text-muted-foreground hover:text-foreground"
+                  "relative rounded-lg px-3 py-2 text-left text-sm transition-colors",
+                  !isActive && "text-muted-foreground hover:text-foreground"
                 )}
                 style={isActive ? { color: ACTIVE_COLOR } : undefined}
               >
-                {t.nav[id]}
+                {isActive && (
+                  <motion.span
+                    layoutId="nav-active-mobile-bg"
+                    className="absolute inset-0 rounded-lg bg-background/60"
+                    transition={{ type: "spring", stiffness: 500, damping: 35 }}
+                  />
+                )}
+                <span className="relative">{t.nav[id]}</span>
               </button>
             );
           })}

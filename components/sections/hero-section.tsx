@@ -87,7 +87,7 @@ export function HeroSection() {
                 {t.hero.ctaProjects}
               </Button>
               <Button size="lg" variant="outline" asChild>
-                <a href="/cv/yvan-jordan-nguetse-cv.pdf" download>
+                <a href="https://drive.google.com/file/d/1CEQ23Z3sEAD4B4RINOg-4cMze4XRjjh5/view?usp=drive_link" download>
                   <Download className="size-4" />
                   {t.hero.ctaResume}
                 </a>

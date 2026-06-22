@@ -53,7 +53,7 @@ export function ProjectCard({
   const gradient = GRADIENTS[index % GRADIENTS.length];
 
   return (
-    <div className="h-[30rem] [perspective:1500px]">
+    <div className="h-[36rem] [perspective:1500px]">
       <div
         className={cn(
           "relative h-full w-full transition-transform duration-700 ease-out [transform-style:preserve-3d] md:hover:[transform:rotateY(180deg)]",

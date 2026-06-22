@@ -16,7 +16,7 @@ export function ProjectImage({ src, alt, title, gradient }: ProjectImageProps) {
   if (hasError) {
     return (
       <div
-        className={`relative flex aspect-video w-full items-center justify-center overflow-hidden rounded-lg bg-gradient-to-br ${gradient}`}
+        className={`relative flex aspect-[4/3] w-full items-center justify-center overflow-hidden rounded-lg bg-gradient-to-br ${gradient}`}
       >
         <span className="font-mono text-sm tracking-wide text-foreground/50">
           {title}
@@ -26,7 +26,7 @@ export function ProjectImage({ src, alt, title, gradient }: ProjectImageProps) {
   }
 
   return (
-    <div className="relative aspect-video w-full overflow-hidden rounded-lg bg-secondary/40">
+    <div className="relative aspect-[4/3] w-full overflow-hidden rounded-lg bg-secondary/40">
       <Image
         src={src}
         alt={alt}
