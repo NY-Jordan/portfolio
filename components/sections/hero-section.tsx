@@ -5,7 +5,7 @@ import { ChevronRight, Download } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { HeroBackdrop } from "@/components/shared/hero-backdrop";
-import { BouncingShapes } from "@/components/shared/bouncing-shapes";
+import { MagneticOrb } from "@/components/shared/magnetic-orb";
 import { GithubIcon } from "@/components/shared/brand-icons";
 import { useLanguage } from "@/components/providers/language-provider";
 import { scrollToPanel } from "@/lib/scroll-to-panel";
@@ -29,7 +29,7 @@ export function HeroSection() {
       className="relative flex h-dvh w-screen shrink-0 snap-start flex-col overflow-hidden"
     >
       <HeroBackdrop />
-      <BouncingShapes />
+      <MagneticOrb />
 
       <div className="relative z-10 mx-auto flex w-full max-w-6xl flex-1 items-center px-6">
         <motion.div

@@ -29,8 +29,8 @@ export const projects: Project[] = [
     slug: "isiQuest",
     title: "IsiQuest",
     description: {
-      fr: "Application de gestion pour salons de beauté : prise de rendez-vous, chat client et système d'avis.",
-      en: "Salon management application with appointment scheduling, a customer chat feature, and a review system.",
+      fr: "Plateforme SaaS d'évaluation multi-produits : module d'évaluation 360°, système de vote multi-modalités et espace client \"Visu\" avec webinaires/coaching en direct.",
+      en: "Multi-product evaluation SaaS platform with 360° assessments, multi-mode voting, and a \"Visu\" client portal featuring live webinar/coaching sessions.",
     },
     features: [
       { fr: "Plateforme multi-produits d'évaluation", en: "Multi-product evaluation platform" },

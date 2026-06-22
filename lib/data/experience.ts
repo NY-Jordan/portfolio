@@ -2,7 +2,7 @@ import type { ExperienceItem } from "@/types";
 
 export const experience: ExperienceItem[] = [
   {
-    period: { fr: "Jan 2023 — Présent", en: "Jan 2023 — Present" },
+    period: { fr: "Fev 2024 — Présent", en: "Feb 2024 — Present" },
     role: { fr: "Développeur Fullstack", en: "Fullstack Developer" },
     company: "Multicreatif",
     location: { fr: "France, à distance", en: "France, Remote" },
