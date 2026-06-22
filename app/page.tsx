@@ -16,15 +16,20 @@ export default function Home() {
 
   return (
     <>
-      {loading && <Loader onComplete={() => setLoading(false)} />}
-      <Navbar />
-      <HorizontalScrollContainer>
-        <HeroSection />
-        <AboutSection />
-        <SkillsSection />
-        <ExperienceSection />
-        <ProjectsSection />
-      </HorizontalScrollContainer>
+      {loading ? <Loader onComplete={() => setLoading(false)} /> : 
+
+        <>
+          <Navbar />
+          <HorizontalScrollContainer>
+            <HeroSection />
+            <AboutSection />
+            <SkillsSection />
+            <ExperienceSection />
+            <ProjectsSection />
+        </HorizontalScrollContainer>
+        </>
+        }
+      
     </>
   );
 }
