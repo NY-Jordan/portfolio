@@ -1,30 +1,53 @@
+export type Locale = "en" | "fr";
+
 export interface LocalizedText {
   fr: string;
   en: string;
 }
 
+export type ProjectStatus = "shipped" | "in-progress";
+
+export interface KeyDecision {
+  title: LocalizedText;
+  detail: LocalizedText;
+}
+
+export interface ResultItem {
+  label: LocalizedText;
+  value: LocalizedText;
+}
+
+export interface ProjectMedia {
+  src: string;
+  alt: LocalizedText;
+}
+
+export interface ProjectLink {
+  label: string;
+  href: string;
+}
+
 export interface Project {
   slug: string;
   title: string;
-  description: LocalizedText;
-  features: LocalizedText[];
-  image: string;
+  tagline: LocalizedText;
+  status: ProjectStatus;
+  year: string;
+  role: LocalizedText;
+  /** Paragraphs joined with \n\n */
+  overview: LocalizedText;
+  problem: LocalizedText;
+  solution: LocalizedText;
+  architecture: LocalizedText;
   technologies: string[];
-  githubUrl?: string;
-  demoUrl?: string;
-  featured?: boolean;
-}
-
-export type SkillCategory =
-  | "Frontend"
-  | "Backend"
-  | "Architecture"
-  | "Database"
-  | "Tools";
-
-export interface Skill {
-  name: string;
-  category: SkillCategory;
+  keyDecisions: KeyDecision[];
+  results: ResultItem[];
+  lessonsLearned: LocalizedText[];
+  media: ProjectMedia[];
+  links: ProjectLink[];
+  featured: boolean;
+  /** True when the case study is placeholder content awaiting real detail from the user. */
+  isPlaceholder?: boolean;
 }
 
 export interface ExperienceItem {
@@ -32,14 +55,31 @@ export interface ExperienceItem {
   role: LocalizedText;
   company: string;
   location: LocalizedText;
-  highlights: LocalizedText[];
+  summary: LocalizedText;
   technologies: string[];
 }
 
-export interface Interest {
+export interface NowItem {
+  area: LocalizedText;
+  detail: LocalizedText;
+}
+
+export interface SocialLink {
+  label: string;
+  href: string;
+  handle?: string;
+}
+
+export interface PostMetadata {
+  title: string;
+  description: string;
+  date: string;
+  tags: string[];
+  cover?: string;
+}
+
+export interface PostSummary extends PostMetadata {
   slug: string;
-  title: LocalizedText;
-  description: LocalizedText;
-  image: string;
-  icon: "music" | "dumbbell";
+  locale: Locale;
+  readingTime: string;
 }

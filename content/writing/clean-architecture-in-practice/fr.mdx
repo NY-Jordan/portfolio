@@ -1,0 +1,36 @@
+export const metadata = {
+  title: "La Clean Architecture en pratique",
+  description:
+    "Ce que la Clean Architecture apporte vraiment sur un produit réel — et où elle devient excessive.",
+  date: "2026-08-10",
+  tags: ["architecture", "engineering"],
+};
+
+_Article d'exemple — à remplacer par un vrai article quand vous serez prêt à publier._
+
+La Clean Architecture est souvent citée et rarement démontrée. La plupart des explications s'arrêtent au diagramme des cercles concentriques. Voici à quoi cela ressemble réellement dans un produit livré.
+
+## L'idée centrale
+
+Séparer les règles métier des frameworks et outils qui les exécutent. Concrètement : votre logique métier ne devrait pas savoir que Next.js, Firebase ou MySQL existent.
+
+```ts
+// domain/booking.ts — aucun import de framework, juste des règles
+export function canBook(slot: Slot, existing: Booking[]): boolean {
+  return !existing.some((booking) => overlaps(booking, slot));
+}
+```
+
+Le code orienté framework appelle cette logique, jamais l'inverse.
+
+## Là où ça paie
+
+Sur Zyraa, le moteur de réservation devait fonctionner à l'identique sur le tableau de bord admin, la marketplace publique et le flux d'encaissement. Comme `canBook` ne savait rien de React ou Firebase, les trois surfaces pouvaient appeler la même règle sans la dupliquer — ni diverger avec le temps.
+
+## Là où c'est excessif
+
+Pour un site vitrine d'une seule page ou un script exécuté une fois, c'est une cérémonie inutile. La règle que j'applique : si la même règle métier doit être correcte à plusieurs endroits, la séparation en vaut la peine. Sinon, une simple fonction dans votre gestionnaire de route suffit.
+
+## Le compromis dont on ne parle jamais
+
+La Clean Architecture ajoute de l'indentation avant d'ajouter de la valeur. Sur un prototype de deux semaines, vous perdrez du temps réel à câbler des interfaces que vous supprimerez peut-être. C'est un pari que le produit survivra à la phase de prototype — faites ce pari consciemment, pas par défaut.
