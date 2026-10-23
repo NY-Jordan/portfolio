@@ -7,6 +7,7 @@ import { EyebrowLabel } from "@/components/ui/eyebrow-label";
 import { socialLinks } from "@/lib/content/social";
 import { isLocale, locales } from "@/lib/i18n/locales";
 import { getDictionary } from "@/lib/i18n/get-dictionary";
+import { localizedAlternates } from "@/lib/seo/alternates";
 
 export function generateStaticParams() {
   return locales.map((locale) => ({ locale }));
@@ -24,7 +25,7 @@ export async function generateMetadata({
   return {
     title: dict.contact.title,
     description: dict.contact.intro,
-    alternates: { canonical: `/${locale}/contact` },
+    alternates: localizedAlternates("/contact", locale),
   };
 }
 

@@ -112,6 +112,10 @@ export const en = {
     backToWriting: "All articles",
     empty: "The first articles are being written — check back soon.",
     publishedOn: "Published",
+    likeAction: "Like this article",
+    likedState: "Liked",
+    viewsLabel: "views",
+    likesLabel: "likes",
   },
   about: {
     eyebrow: "About",
@@ -143,6 +147,12 @@ export const en = {
   footer: {
     tagline: "Building real products, one system at a time.",
     rights: "All rights reserved.",
+    subscribeTitle: "Stay in the loop",
+    subscribePlaceholder: "you@email.com",
+    subscribeCta: "Subscribe",
+    subscribeSuccess: "You're subscribed — thanks!",
+    subscribeDuplicate: "You're already on the list.",
+    subscribeError: "Something went wrong. Try again.",
   },
   common: {
     readMore: "Read more",

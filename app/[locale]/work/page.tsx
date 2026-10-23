@@ -7,6 +7,7 @@ import { ProjectCard } from "@/components/work/project-card";
 import { getAllProjects } from "@/content/projects";
 import { isLocale, locales } from "@/lib/i18n/locales";
 import { getDictionary } from "@/lib/i18n/get-dictionary";
+import { localizedAlternates } from "@/lib/seo/alternates";
 
 export function generateStaticParams() {
   return locales.map((locale) => ({ locale }));
@@ -24,7 +25,7 @@ export async function generateMetadata({
   return {
     title: dict.work.title,
     description: dict.work.intro,
-    alternates: { canonical: `/${locale}/work` },
+    alternates: localizedAlternates("/work", locale),
   };
 }
 

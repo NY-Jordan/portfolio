@@ -1,4 +1,4 @@
-import type { TocEntry } from "@/lib/writing/toc";
+import type { TocEntry } from "@/lib/writing/doc-analysis";
 
 export function TableOfContents({
   toc,

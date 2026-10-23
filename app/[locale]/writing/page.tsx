@@ -7,6 +7,7 @@ import { PostCard } from "@/components/writing/post-card";
 import { getAllPosts } from "@/lib/writing/get-posts";
 import { isLocale, locales } from "@/lib/i18n/locales";
 import { getDictionary } from "@/lib/i18n/get-dictionary";
+import { localizedAlternates } from "@/lib/seo/alternates";
 
 export function generateStaticParams() {
   return locales.map((locale) => ({ locale }));
@@ -24,7 +25,7 @@ export async function generateMetadata({
   return {
     title: dict.writing.title,
     description: dict.writing.intro,
-    alternates: { canonical: `/${locale}/writing` },
+    alternates: localizedAlternates("/writing", locale),
   };
 }
 

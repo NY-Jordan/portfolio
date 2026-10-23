@@ -5,10 +5,9 @@ import { isLocale, locales } from "@/lib/i18n/locales";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
-export function generateStaticParams() {
-  return locales.flatMap((locale) =>
-    getPostSlugs().map((slug) => ({ locale, slug }))
-  );
+export async function generateStaticParams() {
+  const slugs = await getPostSlugs();
+  return locales.flatMap((locale) => slugs.map((slug) => ({ locale, slug })));
 }
 
 export default async function Image({

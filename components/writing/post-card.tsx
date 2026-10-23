@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Eye, Heart } from "lucide-react";
 import { Tag } from "@/components/ui/tag";
 import type { Locale, PostSummary } from "@/types";
 
@@ -27,6 +28,15 @@ export function PostCard({
         <span aria-hidden="true">&middot;</span>
         <span>
           {post.readingTime} {readingTimeLabel}
+        </span>
+        <span aria-hidden="true">&middot;</span>
+        <span className="flex items-center gap-1">
+          <Eye className="size-4" />
+          {post.views}
+        </span>
+        <span className="flex items-center gap-1">
+          <Heart className="size-4" />
+          {post.likes}
         </span>
       </div>
       <h3 className="font-display text-2xl font-semibold tracking-tight transition-colors group-hover:text-accent">

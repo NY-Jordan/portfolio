@@ -1,21 +1,22 @@
 import type { NextConfig } from "next";
-import createMDX from "@next/mdx";
+
+const supabaseHost = process.env.NEXT_PUBLIC_SUPABASE_URL
+  ? new URL(process.env.NEXT_PUBLIC_SUPABASE_URL).hostname
+  : undefined;
 
 const nextConfig: NextConfig = {
-  pageExtensions: ["js", "jsx", "md", "mdx", "ts", "tsx"],
   images: {
     formats: ["image/avif", "image/webp"],
+    remotePatterns: supabaseHost
+      ? [
+          {
+            protocol: "https",
+            hostname: supabaseHost,
+            pathname: "/storage/v1/object/public/**",
+          },
+        ]
+      : [],
   },
 };
 
-const withMDX = createMDX({
-  options: {
-    remarkPlugins: ["remark-gfm"],
-    rehypePlugins: [
-      "rehype-slug",
-      ["rehype-pretty-code", { theme: "github-dark-default" }],
-    ],
-  },
-});
-
-export default withMDX(nextConfig);
+export default nextConfig;

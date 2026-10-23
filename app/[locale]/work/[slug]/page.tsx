@@ -9,6 +9,9 @@ import { Tag } from "@/components/ui/tag";
 import { getAllProjects, getProjectBySlug } from "@/content/projects";
 import { isLocale, locales } from "@/lib/i18n/locales";
 import { getDictionary } from "@/lib/i18n/get-dictionary";
+import { localizedAlternates } from "@/lib/seo/alternates";
+import { JsonLd } from "@/lib/seo/json-ld";
+import { breadcrumbSchema } from "@/lib/seo/schemas";
 
 export function generateStaticParams() {
   return locales.flatMap((locale) =>
@@ -26,14 +29,23 @@ export async function generateMetadata({
   const project = getProjectBySlug(slug);
   if (!project) return {};
 
+  const cover = project.media[0];
+
   return {
     title: project.title,
     description: project.tagline[locale],
-    alternates: { canonical: `/${locale}/work/${slug}` },
+    alternates: localizedAlternates(`/work/${slug}`, locale),
     openGraph: {
       title: project.title,
       description: project.tagline[locale],
       type: "article",
+      locale,
+      images: cover ? [{ url: cover.src, alt: cover.alt[locale] }] : undefined,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: project.title,
+      description: project.tagline[locale],
     },
   };
 }
@@ -53,6 +65,13 @@ export default async function ProjectPage({
 
   return (
     <Container className="py-16 lg:py-24">
+      <JsonLd
+        data={breadcrumbSchema([
+          { name: locale === "en" ? "Home" : "Accueil", path: `/${locale}` },
+          { name: dict.work.title, path: `/${locale}/work` },
+          { name: project.title, path: `/${locale}/work/${slug}` },
+        ])}
+      />
       <Link
         href={`/${locale}/work`}
         className="flex w-fit items-center gap-1 text-sm text-muted-foreground hover:text-foreground"

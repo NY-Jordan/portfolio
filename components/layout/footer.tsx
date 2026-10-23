@@ -1,9 +1,10 @@
 import Link from "next/link";
+import Image from "next/image";
 import { Container } from "@/components/ui/container";
+import { SubscribeForm } from "@/components/layout/subscribe-form";
 import { socialLinks } from "@/lib/content/social";
 import type { Dictionary } from "@/lib/i18n/dictionaries/en";
 import type { Locale } from "@/types";
-import Image from "next/image";
 
 interface FooterProps {
   locale: Locale;
@@ -37,6 +38,15 @@ export function Footer({ locale, dict }: FooterProps) {
               </a>
             ))}
           </nav>
+
+          <SubscribeForm
+            title={dict.footer.subscribeTitle}
+            placeholder={dict.footer.subscribePlaceholder}
+            cta={dict.footer.subscribeCta}
+            successMessage={dict.footer.subscribeSuccess}
+            duplicateMessage={dict.footer.subscribeDuplicate}
+            errorMessage={dict.footer.subscribeError}
+          />
         </div>
 
         <div className="flex flex-col-reverse items-start justify-between gap-4 border-t border-border pt-6 text-xs text-muted-foreground sm:flex-row sm:items-center">

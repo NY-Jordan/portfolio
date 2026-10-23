@@ -9,6 +9,7 @@ import { AboutPreviewSection } from "@/components/sections/about-preview-section
 import { ContactCtaSection } from "@/components/sections/contact-cta-section";
 import { isLocale } from "@/lib/i18n/locales";
 import { getDictionary } from "@/lib/i18n/get-dictionary";
+import { localizedAlternates } from "@/lib/seo/alternates";
 import { notFound } from "next/navigation";
 
 export async function generateMetadata({
@@ -23,7 +24,7 @@ export async function generateMetadata({
   return {
     title: dict.meta.siteTitle,
     description: dict.meta.siteDescription,
-    alternates: { canonical: `/${locale}` },
+    alternates: localizedAlternates("", locale),
   };
 }
 

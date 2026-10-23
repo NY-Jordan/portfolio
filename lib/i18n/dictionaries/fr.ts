@@ -114,6 +114,10 @@ export const fr: Dictionary = {
     backToWriting: "Tous les articles",
     empty: "Les premiers articles sont en cours d'écriture — revenez bientôt.",
     publishedOn: "Publié le",
+    likeAction: "Aimer cet article",
+    likedState: "Aimé",
+    viewsLabel: "vues",
+    likesLabel: "j'aime",
   },
   about: {
     eyebrow: "À propos",
@@ -145,6 +149,12 @@ export const fr: Dictionary = {
   footer: {
     tagline: "Construire de vrais produits, un système à la fois.",
     rights: "Tous droits réservés.",
+    subscribeTitle: "Restez informé",
+    subscribePlaceholder: "vous@email.com",
+    subscribeCta: "S'abonner",
+    subscribeSuccess: "Vous êtes abonné — merci !",
+    subscribeDuplicate: "Vous êtes déjà inscrit.",
+    subscribeError: "Une erreur est survenue. Réessayez.",
   },
   common: {
     readMore: "Lire la suite",

@@ -1,9 +1,18 @@
+import type { TiptapDoc, TiptapNode } from "@/types";
+
 const WORDS_PER_MINUTE = 200;
 
-/** Hand-rolled estimator (word count / wpm) — no dependency needed for this. */
-export function estimateReadingMinutes(source: string): number {
-  const words = source
-    .replace(/```[\s\S]*?```/g, "")
+function extractText(node: TiptapNode): string {
+  if (node.type === "codeBlock") return "";
+  if (node.type === "text") return node.text ?? "";
+  return (node.content ?? []).map(extractText).join(" ");
+}
+
+/** Word count / wpm, mirroring the previous markdown-based estimate. */
+export function estimateReadingMinutes(doc: TiptapDoc): number {
+  const words = doc.content
+    .map(extractText)
+    .join(" ")
     .split(/\s+/)
     .filter(Boolean).length;
 

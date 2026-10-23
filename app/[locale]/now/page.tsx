@@ -6,6 +6,7 @@ import { EyebrowLabel } from "@/components/ui/eyebrow-label";
 import { nowItems, nowLastUpdated } from "@/lib/content/now";
 import { isLocale, locales } from "@/lib/i18n/locales";
 import { getDictionary } from "@/lib/i18n/get-dictionary";
+import { localizedAlternates } from "@/lib/seo/alternates";
 
 export function generateStaticParams() {
   return locales.map((locale) => ({ locale }));
@@ -23,7 +24,7 @@ export async function generateMetadata({
   return {
     title: dict.now.title,
     description: dict.now.intro,
-    alternates: { canonical: `/${locale}/now` },
+    alternates: localizedAlternates("/now", locale),
   };
 }
 

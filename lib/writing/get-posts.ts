@@ -1,51 +1,69 @@
-import fs from "node:fs";
-import path from "node:path";
-import type { Locale, PostMetadata, PostSummary } from "@/types";
+import { supabasePublic } from "@/lib/supabase/public";
+import type { Locale, PostMetadata, PostSummary, TiptapDoc } from "@/types";
 import { estimateReadingMinutes } from "./reading-time";
-import { extractToc, type TocEntry } from "./toc";
+import { analyzeDoc, type TocEntry } from "./doc-analysis";
 
-const CONTENT_DIR = path.join(process.cwd(), "content", "writing");
-
-export function getPostSlugs(): string[] {
-  if (!fs.existsSync(CONTENT_DIR)) return [];
-  return fs
-    .readdirSync(CONTENT_DIR, { withFileTypes: true })
-    .filter((entry) => entry.isDirectory())
-    .map((entry) => entry.name);
+interface TranslationRow {
+  locale: Locale;
+  title: string;
+  description: string;
+  content: TiptapDoc;
 }
 
-function readSource(locale: Locale, slug: string): string | null {
-  const filePath = path.join(CONTENT_DIR, slug, `${locale}.mdx`);
-  if (!fs.existsSync(filePath)) return null;
-  return fs.readFileSync(filePath, "utf8");
+interface ArticleRow {
+  slug: string;
+  date: string;
+  tags: string[];
+  cover: string | null;
+  views_count: number;
+  likes_count: number;
+  article_translations: TranslationRow[];
+}
+
+function toMetadata(row: ArticleRow, translation: TranslationRow): PostMetadata {
+  return {
+    title: translation.title,
+    description: translation.description,
+    date: row.date,
+    tags: row.tags,
+    cover: row.cover ?? undefined,
+    views: row.views_count,
+    likes: row.likes_count,
+  };
+}
+
+export async function getPostSlugs(): Promise<string[]> {
+  const { data } = await supabasePublic
+    .from("articles")
+    .select("slug")
+    .eq("status", "published");
+
+  return (data ?? []).map((row) => row.slug as string);
 }
 
 export async function getAllPosts(locale: Locale): Promise<PostSummary[]> {
-  const summaries: PostSummary[] = [];
+  const { data } = await supabasePublic
+    .from("articles")
+    .select(
+      "slug, date, tags, cover, views_count, likes_count, article_translations!inner(locale, title, description, content)"
+    )
+    .eq("status", "published")
+    .eq("article_translations.locale", locale)
+    .order("date", { ascending: false });
 
-  for (const slug of getPostSlugs()) {
-    const source = readSource(locale, slug);
-    if (!source) continue;
-
-    const mod = (await import(`@/content/writing/${slug}/${locale}.mdx`)) as {
-      metadata: PostMetadata;
-    };
-
-    summaries.push({
-      ...mod.metadata,
-      slug,
+  return ((data ?? []) as ArticleRow[]).map((row) => {
+    const translation = row.article_translations[0];
+    return {
+      ...toMetadata(row, translation),
+      slug: row.slug,
       locale,
-      readingTime: `${estimateReadingMinutes(source)}`,
-    });
-  }
-
-  return summaries.sort(
-    (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
-  );
+      readingTime: `${estimateReadingMinutes(translation.content)}`,
+    };
+  });
 }
 
 interface PostContent {
-  Component: React.ComponentType;
+  content: TiptapDoc;
   metadata: PostMetadata;
   readingMinutes: number;
   toc: TocEntry[];
@@ -55,19 +73,29 @@ export async function getPostBySlug(
   locale: Locale,
   slug: string
 ): Promise<PostContent | null> {
-  const source = readSource(locale, slug);
-  if (!source) return null;
+  const { data } = await supabasePublic
+    .from("articles")
+    .select(
+      "slug, date, tags, cover, views_count, likes_count, article_translations!inner(locale, title, description, content)"
+    )
+    .eq("status", "published")
+    .eq("slug", slug)
+    .eq("article_translations.locale", locale)
+    .maybeSingle();
 
-  const mod = (await import(`@/content/writing/${slug}/${locale}.mdx`)) as {
-    default: React.ComponentType;
-    metadata: PostMetadata;
-  };
+  if (!data) return null;
+
+  const row = data as ArticleRow;
+  const translation = row.article_translations[0];
+  if (!translation) return null;
+
+  const { toc, doc } = analyzeDoc(translation.content);
 
   return {
-    Component: mod.default,
-    metadata: mod.metadata,
-    readingMinutes: estimateReadingMinutes(source),
-    toc: extractToc(source),
+    content: doc,
+    metadata: toMetadata(row, translation),
+    readingMinutes: estimateReadingMinutes(translation.content),
+    toc,
   };
 }
 

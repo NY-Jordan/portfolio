@@ -8,6 +8,9 @@ import { Footer } from "@/components/layout/footer";
 import { locales, isLocale } from "@/lib/i18n/locales";
 import { getDictionary } from "@/lib/i18n/get-dictionary";
 import { SITE_URL } from "@/lib/site";
+import { localizedAlternates } from "@/lib/seo/alternates";
+import { JsonLd } from "@/lib/seo/json-ld";
+import { personSchema, websiteSchema } from "@/lib/seo/schemas";
 
 const inter = Inter({ variable: "--font-inter", subsets: ["latin"] });
 const spaceGrotesk = Space_Grotesk({
@@ -33,17 +36,15 @@ export async function generateMetadata({
     metadataBase: new URL(SITE_URL),
     title: { default: dict.meta.siteTitle, template: `%s — NY-Jordan` },
     description: dict.meta.siteDescription,
-    alternates: {
-      canonical: `/${locale}`,
-      languages: {
-        en: "/en",
-        fr: "/fr",
-      },
-    },
+    authors: [{ name: "Yvan Jordan Nguetse", url: SITE_URL }],
+    creator: "Yvan Jordan Nguetse",
+    publisher: "Yvan Jordan Nguetse",
+    alternates: localizedAlternates("", locale),
     openGraph: {
       title: dict.meta.siteTitle,
       description: dict.meta.siteDescription,
-      locale,
+      locale: locale === "en" ? "en_US" : "fr_FR",
+      alternateLocale: locale === "en" ? "fr_FR" : "en_US",
       type: "website",
     },
     twitter: {
@@ -71,6 +72,8 @@ export default async function RootLayout({
       className={`${inter.variable} ${spaceGrotesk.variable} ${geistMono.variable} antialiased`}
     >
       <body className="flex min-h-dvh flex-col bg-background text-foreground">
+        <JsonLd data={personSchema()} />
+        <JsonLd data={websiteSchema(locale)} />
         <Navbar locale={locale} nav={dict.nav} />
         <main className="flex-1">{children}</main>
         <Footer locale={locale} dict={dict} />

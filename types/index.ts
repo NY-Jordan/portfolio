@@ -76,10 +76,32 @@ export interface PostMetadata {
   date: string;
   tags: string[];
   cover?: string;
+  views: number;
+  likes: number;
 }
 
 export interface PostSummary extends PostMetadata {
   slug: string;
   locale: Locale;
   readingTime: string;
+}
+
+export type ArticleStatus = "draft" | "published";
+
+export interface TiptapMark {
+  type: string;
+  attrs?: Record<string, unknown>;
+}
+
+export interface TiptapNode {
+  type: string;
+  attrs?: Record<string, unknown>;
+  content?: TiptapNode[];
+  text?: string;
+  marks?: TiptapMark[];
+}
+
+export interface TiptapDoc {
+  type: "doc";
+  content: TiptapNode[];
 }

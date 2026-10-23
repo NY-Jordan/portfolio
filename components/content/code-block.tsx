@@ -1,15 +1,13 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { Check, Copy } from "lucide-react";
 
-export function PreBlock(props: React.ComponentProps<"pre">) {
-  const ref = useRef<HTMLPreElement>(null);
+export function CodeBlock({ html, rawCode }: { html: string; rawCode: string }) {
   const [copied, setCopied] = useState(false);
 
   async function handleCopy() {
-    const text = ref.current?.textContent ?? "";
-    await navigator.clipboard.writeText(text);
+    await navigator.clipboard.writeText(rawCode);
     setCopied(true);
     setTimeout(() => setCopied(false), 1500);
   }
@@ -24,10 +22,9 @@ export function PreBlock(props: React.ComponentProps<"pre">) {
       >
         {copied ? <Check className="size-4" /> : <Copy className="size-4" />}
       </button>
-      <pre
-        ref={ref}
-        className="overflow-x-auto rounded-lg border border-border bg-card py-4 text-sm"
-        {...props}
+      <div
+        className="overflow-x-auto rounded-lg border border-border bg-card py-4 text-sm [&_pre]:m-0! [&_pre]:bg-transparent! [&_pre]:px-4"
+        dangerouslySetInnerHTML={{ __html: html }}
       />
     </div>
   );
