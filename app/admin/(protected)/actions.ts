@@ -4,12 +4,27 @@ import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 
 import { createClient } from "@/lib/supabase/server";
+import { locales } from "@/lib/i18n/locales";
 import type { ArticleStatus, TiptapDoc } from "@/types";
 
 export async function signOut() {
   const supabase = await createClient();
   await supabase.auth.signOut();
   redirect("/admin/login");
+}
+
+/**
+ * The public writing pages (list + detail) and the homepage's writing
+ * preview are statically generated from Supabase at build time — without
+ * this, a newly published/edited/deleted article never shows up until the
+ * next full deploy.
+ */
+function revalidatePublicWritingPages(slug: string) {
+  for (const locale of locales) {
+    revalidatePath(`/${locale}`);
+    revalidatePath(`/${locale}/writing`);
+    revalidatePath(`/${locale}/writing/${slug}`);
+  }
 }
 
 export interface ArticleInput {
@@ -53,11 +68,18 @@ export async function createArticle(input: ArticleInput) {
   }
 
   revalidatePath("/admin");
+  revalidatePublicWritingPages(input.slug);
   redirect("/admin");
 }
 
 export async function updateArticle(id: string, input: ArticleInput) {
   const supabase = await createClient();
+
+  const { data: existing } = await supabase
+    .from("articles")
+    .select("slug")
+    .eq("id", id)
+    .maybeSingle();
 
   const { error } = await supabase
     .from("articles")
@@ -87,11 +109,22 @@ export async function updateArticle(id: string, input: ArticleInput) {
   }
 
   revalidatePath("/admin");
+  revalidatePublicWritingPages(input.slug);
+  if (existing && existing.slug !== input.slug) {
+    revalidatePublicWritingPages(existing.slug);
+  }
   redirect("/admin");
 }
 
 export async function deleteArticle(id: string) {
   const supabase = await createClient();
+
+  const { data: existing } = await supabase
+    .from("articles")
+    .select("slug")
+    .eq("id", id)
+    .maybeSingle();
+
   const { error } = await supabase.from("articles").delete().eq("id", id);
 
   if (error) {
@@ -99,4 +132,7 @@ export async function deleteArticle(id: string) {
   }
 
   revalidatePath("/admin");
+  if (existing) {
+    revalidatePublicWritingPages(existing.slug);
+  }
 }
